@@ -23,19 +23,17 @@ module Lita
         end
 
         def access_token
-          config.access_token
+          config.access_token unless config.access_token.nil?
+          ENV['DIGITALOCEAN_ACCESS_TOKEN'] unless ENV['DIGITALOCEAN_ACCESS_TOKEN'].nil?
+          raise Lita::ValidationError t("credentials_missing")
         end
 
         def client
           @client ||= ::DropletKit::Client.new(access_token: access_token)
         end
 
-        def client_id
-          config.client_id
-        end
-
         def do_call(response)
-          unless access_token && client_id
+          unless access_token
             response.reply(t("credentials_missing"))
             return
           end
