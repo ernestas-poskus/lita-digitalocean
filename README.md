@@ -18,15 +18,13 @@ gem "lita-digitalocean"
 
 ### Required attributes
 
-* `client_id` (String) - The client ID for the account to manage.
-* `api_key` (String) - The API key for the account to manage.
+* `access_token` (String) - The API (v2) key for the account to manage.
 
 ### Example
 
 ``` ruby
 Lita.configure do |config|
-  config.handlers.digitalocean.client_id = "BdCsMEJYPv2tu7xQtLRB3"
-  config.handlers.digitalocean.api_key = "3df020a0441731e5ca47243b5515cbb7"
+  config.handlers.digitalocean.access_token = "asdf1234asdf1234..."
 end
 ```
 

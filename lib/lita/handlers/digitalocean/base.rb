@@ -1,4 +1,4 @@
-require "digital_ocean"
+require "droplet_kit"
 require "lita-keyword-arguments"
 require "hashie"
 
@@ -22,12 +22,12 @@ module Lita
           route(regexp, route_name, options)
         end
 
-        def api_key
-          config.api_key
+        def access_token
+          config.access_token
         end
 
         def client
-          @client ||= ::DigitalOcean::API.new(client_id: client_id, api_key: api_key)
+          @client ||= ::DropletKit::Client.new(access_token: access_token)
         end
 
         def client_id
@@ -35,7 +35,7 @@ module Lita
         end
 
         def do_call(response)
-          unless api_key && client_id
+          unless access_token && client_id
             response.reply(t("credentials_missing"))
             return
           end
