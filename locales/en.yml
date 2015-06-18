@@ -3,7 +3,7 @@ en:
     handlers:
       digitalocean:
         credentials_missing: >-
-          client_id and api_key must be set in Lita's configuration to
+          access_token must be set in Lita's configuration to
           use the DigitalOcean commands.
         domains:
           create:

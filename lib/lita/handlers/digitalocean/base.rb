@@ -23,9 +23,9 @@ module Lita
         end
 
         def access_token
-          config.access_token unless config.access_token.nil?
-          ENV['DIGITALOCEAN_ACCESS_TOKEN'] unless ENV['DIGITALOCEAN_ACCESS_TOKEN'].nil?
-          raise Lita::ValidationError t("credentials_missing")
+          return config.access_token unless config.nil? || config.access_token.nil?
+          return ENV['DIGITALOCEAN_ACCESS_TOKEN'] unless ENV['DIGITALOCEAN_ACCESS_TOKEN'].nil?
+          raise Lita::ValidationError, t("credentials_missing")
         end
 
         def client
