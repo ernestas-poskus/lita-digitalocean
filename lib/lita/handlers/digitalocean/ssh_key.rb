@@ -32,7 +32,7 @@ module Lita
           end
 
           do_response = do_call(response) do |client|
-            client.ssh_keys.add(name: name, ssh_pub_key: public_key)
+            client.ssh_keys.create(name: name, public_key: public_key)
           end or return
 
           response.reply(t("ssh_keys.add.created", do_response[:ssh_key]))
@@ -42,7 +42,7 @@ module Lita
           key_id = response.matches[0][0]
 
           do_call(response) do |client|
-            client.ssh_keys.delete(key_id)
+            client.ssh_keys.delete(id: key_id)
           end or return
 
           response.reply(t("ssh_keys.delete.deleted", key_id: key_id))
@@ -60,7 +60,7 @@ module Lita
           end
 
           do_response = do_call(response) do |client|
-            client.ssh_keys.edit(response.matches[0][0], kwargs)
+            client.ssh_keys.update(response.matches[0][0], kwargs)
           end or return
 
           response.reply(t("ssh_keys.edit.updated", do_response[:ssh_key]))
@@ -68,7 +68,7 @@ module Lita
 
         def list(response)
           do_response = do_call(response) do |client|
-            client.ssh_keys.list
+            client.ssh_keys.all
           end or return
 
           if do_response[:ssh_keys].empty?
@@ -82,7 +82,7 @@ module Lita
 
         def show(response)
           do_response = do_call(response) do |client|
-            client.ssh_keys.show(response.matches[0][0])
+            client.ssh_keys.find(response.matches[0][0])
           end or return
 
           key = do_response[:ssh_key]

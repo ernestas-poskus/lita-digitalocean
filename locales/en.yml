@@ -158,10 +158,10 @@ en:
           details: "ID: %{id}, Name: %{name}, Slug: %{slug}"
         ssh_keys:
           add:
-            created: "Created new SSH key: %{id} (%{name}): %{ssh_pub_key}"
+            created: "Created new SSH key: %{id} (%{name}): %{public_key}"
           delete:
             deleted: "Deleted SSH key: %{key_id}"
           edit:
-            updated: "Updated SSH key: %{id} (%{name}): %{ssh_pub_key}"
+            updated: "Updated SSH key: %{id} (%{name}): %{public_key}"
           list:
             empty: No SSH keys have been added yet.
