@@ -11,18 +11,13 @@ describe Lita::Handlers::Digitalocean::SSHKey, lita_handler: true do
   it { is_expected.to route_command("do ssh keys list").to(:list) }
   it { is_expected.to route_command("do ssh keys show 123").to(:show) }
 
-  let(:client) { instance_double("::DigitalOcean::API", ssh_keys: client_ssh_keys) }
-  let(:client_ssh_keys) { instance_double("::DigitalOcean::Resource::SSHKey") }
+  let(:client) { instance_double("::DropletKit::Client") }
+  let(:client_ssh_keys) { instance_double("::DropletKit::SSHKeyResource") }
 
   before do
-    registry.config.handlers.digitalocean.tap do |config|
-      config.client_id = "CLIENT_ID"
-      config.api_key = "API_KEY"
-    end
-
     robot.auth.add_user_to_group!(user, :digitalocean_admins)
 
-    allow(::DigitalOcean::API).to receive(:new).and_return(client)
+    allow(::DropletKit::Client).to receive(:new).with({access_token: ENV['DIGITALOCEAN_ACCESS_TOKEN']}).and_return(client)
   end
 
   let(:do_list) do
@@ -48,17 +43,17 @@ describe Lita::Handlers::Digitalocean::SSHKey, lita_handler: true do
       ssh_key: {
         id: 123,
         name: "My Key",
-        ssh_pub_key: "ssh-rsa abcdefg"
+        public_key: "ssh-rsa abcdefg"
       }
     }
   end
 
   describe "#add" do
     it "responds with the details of the new key" do
-      allow(client_ssh_keys).to receive(:add).with(
+      allow(client_ssh_keys).to receive(:create).with({
         name: "My Key",
-        ssh_pub_key: "ssh-rsa abcdefg"
-      ).and_return(do_key)
+        public_key: "ssh-rsa abcdefg"
+      }).and_return(do_key)
       send_command("do ssh keys add 'My Key' 'ssh-rsa abcdefg'")
       expect(replies.last).to eq("Created new SSH key: 123 (My Key): ssh-rsa abcdefg")
     end
@@ -84,7 +79,7 @@ describe Lita::Handlers::Digitalocean::SSHKey, lita_handler: true do
       allow(client_ssh_keys).to receive(:edit).with(
         "123",
         name: "My Key",
-        ssh_pub_key: "ssh-rsa abcdefg"
+        public_key: "ssh-rsa abcdefg"
       ).and_return(do_key)
       send_command(%{do ssh keys edit 123 --name 'My Key' --public-key "ssh-rsa abcdefg"})
       expect(replies.last).to eq("Updated SSH key: 123 (My Key): ssh-rsa abcdefg")
