@@ -17,6 +17,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "lita", ">= 4.0"
   spec.add_runtime_dependency "lita-keyword-arguments"
   spec.add_runtime_dependency "droplet_kit", ">= 1.2.2"
+  spec.add_runtime_dependency "hashie"
 
   spec.add_development_dependency "bundler", "~> 1.10.4"
   spec.add_development_dependency "rake"
